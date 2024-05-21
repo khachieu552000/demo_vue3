@@ -1,18 +1,26 @@
 <template>
-    <div>
-        <!-- Các phần tử khác trong ứng dụng của bạn -->
-        <h1>Ứng dụng của tôi</h1>
-        <!-- Sử dụng thành phần modal -->
-        <MyModal :titleModal="'test'"/>
-    </div>
+
+    <h1>Hello Every Body</h1>
+    <button id="show-modal" @click="showModal = true">Show Modal</button>
+
+    <Teleport to="body">
+        <modal :show="showModal" :dataList="dataList" @close="showModal = false">
+            <template #header>
+                <h3>Custom Header</h3>
+            </template>
+        </modal>
+    </Teleport>
 </template>
 
-<script>
-import MyModal from '@/components/Modal.vue';
+<script setup>
+import Modal from '@/components/Modals/ModalList.vue'
+import { ref } from 'vue'
 
-export default {
-    components: {
-        MyModal,
-    },
-};
+const showModal = ref(false)
+const dataList = [
+    { name: 'Chuck Norris', power: Infinity },
+    { name: 'Bruce Lee', power: 9000 },
+    { name: 'Jackie Chan', power: 7000 },
+    { name: 'Jet Li', power: 8000 }
+];
 </script>
