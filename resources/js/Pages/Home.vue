@@ -18,9 +18,9 @@ import { ref } from 'vue'
 
 const showModal = ref(false)
 const dataList = [
-    { name: 'Chuck Norris', power: Infinity },
-    { name: 'Bruce Lee', power: 9000 },
-    { name: 'Jackie Chan', power: 7000 },
-    { name: 'Jet Li', power: 8000 }
+    { id: 1, name: 'Chuck Norris', power: 7777 },
+    { id: 2, name: 'Bruce Lee', power: 9000 },
+    { id: 3, name: 'Jackie Chan', power: 7000 },
+    { id: 4, name: 'Jet Li', power: 8000 }
 ];
 </script>

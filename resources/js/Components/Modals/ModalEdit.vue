@@ -22,11 +22,16 @@
 
                 <div class="modal-footer">
                     <slot name="footer">
-                        <button class="modal-default-button">Save</button>
+                        <button class="modal-default-button" @click="showModalAlert = true">OK</button>
+                        <ModalAlert :showModalAlert="showModalAlert" @closeModalAlert="showModalAlert = false">
+                            <template #body>
+                                <p>Notification Edit Success</p>
+                            </template>
+                        </ModalAlert>
                         <button
                             class="modal-default-button"
                             @click="$emit('closeModalEdit')"
-                        >OK</button>
+                        >Cancel</button>
                     </slot>
                 </div>
             </div>
@@ -35,14 +40,23 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {ref, watch, computed } from "vue";
+import ModalAlert from "@/Components/Modals/ModalAlert.vue";
 
 const props = defineProps({
-    showModalEdit: Boolean
+    showModalEdit: Boolean,
+    dataUser: Object,
 });
 
-const name = ref('name');
-const power = ref('power');
+const name = ref(props.dataUser.name);
+const power = ref(props.dataUser.power);
+const showModalAlert = ref(false);
+
+// Watch for changes in props.dataUser and update local refs
+watch(() => props.dataUser, (newDataUser) => {
+    name.value = newDataUser.name;
+    power.value = newDataUser.power;
+}, { immediate: true });
 
 </script>
 

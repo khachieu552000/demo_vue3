@@ -15,23 +15,23 @@
                         <table>
                             <thead>
                             <tr>
-                                <th class="w-45">Name</th>
-                                <th class="w-45">Power</th>
-                                <th class="w-45">Action</th>
+                                <th class="custom-table">Name</th>
+                                <th class="custom-table">Power</th>
+                                <th class="custom-table">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="(data, index) in dataList" :key="index">
-                                <td class="w-45 bg-center">{{ data.name }}</td>
-                                <td class="w-45">{{ data.power }}</td>
-                                <td>
+                                <td class="custom-table bg-center">{{ data.name }}</td>
+                                <td class="custom-table">{{ data.power }}</td>
+                                <td class="d-flex">
                                     <div>
                                         <button @click="showModalAlert = true">Alert</button>
                                         <ModalAlert :showModalAlert="showModalAlert" @closeModalAlert="showModalAlert = false"></ModalAlert>
                                     </div>
-                                    <div>
-                                        <button @click="showModalEdit = true">Modal Edit</button>
-                                        <ModalEdit :showModalEdit="showModalEdit" @closeModalEdit="showModalEdit = false"></ModalEdit>
+                                    <div class="ml-10">
+                                        <button @click="showEdit(data)">Modal Edit</button>
+                                        <ModalEdit :showModalEdit="showModalEdit" :dataUser="dataUser" @closeModalEdit="showModalEdit = false"></ModalEdit>
                                     </div>
                                 </td>
                             </tr>
@@ -61,6 +61,12 @@ const props = defineProps({
 
 const showModalAlert = ref(false);
 const showModalEdit = ref(false);
+const dataUser = ref({});
+
+function showEdit(data) {
+    this.showModalEdit = true;
+    this.dataUser = data;
+}
 
 </script>
 
@@ -106,6 +112,17 @@ const showModalEdit = ref(false);
 
 .modal-leave-to {
     opacity: 0;
+}
+
+.custom-table {
+    text-align: left;
+    width: 10%;
+}
+.d-flex {
+    display: flex;
+}
+.ml-10 {
+    margin-left: 10px;
 }
 
 .close {
