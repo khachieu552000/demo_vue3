@@ -8,40 +8,48 @@
                 </div>
 
                 <div class="modal-body">
-                    <slot name="body">
-                        <div class="mb-10">
-                            <label for="name">Name</label>
-                            <input class="in" type="text" v-model="name">
+                    <form @submit.prevent="submit">
+                        <slot name="body">
+                            <div class="mb-10">
+                                <label for="name">Name</label>
+                                <input class="ml-10" type="text" v-model="name">
+                                <span v-if="errors.name">{{ errors.name }}</span>
+                            </div>
+                            <div class="mb-10">
+                                <label for="email">Email</label>
+                                <input class="ml-10" type="email" v-model="email">
+                                <span v-if="errors.email">{{ errors.email }}</span>
+                            </div>
+                        </slot>
+                        <div class="modal-footer">
+                            <slot name="footer">
+                                <button class="modal-default-button" type="submit">OK</button>
+                                <ModalAlert :showModalAlert="showModalAlert" @closeModalAlert="showModalAlert = false">
+                                    <template #body>
+                                        <p>Notification Edit Success</p>
+                                    </template>
+                                </ModalAlert>
+                                <button
+                                    class="modal-default-button"
+                                    @click="$emit('closeModalEdit')"
+                                    type="button"
+                                >Cancel</button>
+                            </slot>
                         </div>
-                        <div class="mb-10">
-                            <label for="power">Power</label>
-                            <input type="text" v-model="power">
-                        </div>
-                    </slot>
-                </div>
-
-                <div class="modal-footer">
-                    <slot name="footer">
-                        <button class="modal-default-button" @click="showModalAlert = true">OK</button>
-                        <ModalAlert :showModalAlert="showModalAlert" @closeModalAlert="showModalAlert = false">
-                            <template #body>
-                                <p>Notification Edit Success</p>
-                            </template>
-                        </ModalAlert>
-                        <button
-                            class="modal-default-button"
-                            @click="$emit('closeModalEdit')"
-                        >Cancel</button>
-                    </slot>
+                    </form>
                 </div>
             </div>
         </div>
     </Transition>
 </template>
 
+
+
+
 <script setup>
-import {ref, watch, computed } from "vue";
-import ModalAlert from "@/Components/Modals/ModalAlert.vue";
+import { ref, watch } from 'vue';
+import ModalAlert from '@/Components/Modals/ModalAlert.vue';
+import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps({
     showModalEdit: Boolean,
@@ -49,16 +57,32 @@ const props = defineProps({
 });
 
 const name = ref(props.dataUser.name);
-const power = ref(props.dataUser.power);
+const email = ref(props.dataUser.email);
 const showModalAlert = ref(false);
+const errors = ref({});
+
+function submit() {
+    Inertia.post(`/user/${props.dataUser.id}`, {
+        name: name.value,
+        email: email.value,
+    }, {
+        preserveState: true, // Keep modal open on error
+        onError: (err) => {
+            console.log(444);
+            alert(3333);
+            errors.value = err;
+        },
+    });
+}
 
 // Watch for changes in props.dataUser and update local refs
 watch(() => props.dataUser, (newDataUser) => {
     name.value = newDataUser.name;
-    power.value = newDataUser.power;
+    email.value = newDataUser.email;
 }, { immediate: true });
-
 </script>
+
+
 
 <style>
 .modal-mask {
@@ -107,10 +131,9 @@ watch(() => props.dataUser, (newDataUser) => {
     margin-bottom: 10px;
 }
 
-/*input {*/
-/*    margin-bottom: 10px;*/
-/*    display: block;*/
-/*}*/
+.ml-10 {
+    margin-left: 10px;
+}
 .modal-enter-from .modal-container,
 .modal-leave-to .modal-container {
     -webkit-transform: scale(1.1);

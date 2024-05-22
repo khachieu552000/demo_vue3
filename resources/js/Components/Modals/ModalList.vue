@@ -15,15 +15,17 @@
                         <table>
                             <thead>
                             <tr>
+                                <th class="custom-table">ID</th>
                                 <th class="custom-table">Name</th>
-                                <th class="custom-table">Power</th>
+                                <th class="custom-table">Email</th>
                                 <th class="custom-table">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="(data, index) in dataList" :key="index">
+                                <td class="custom-table bg-center">{{ data.id }}</td>
                                 <td class="custom-table bg-center">{{ data.name }}</td>
-                                <td class="custom-table">{{ data.power }}</td>
+                                <td class="custom-table">{{ data.email }}</td>
                                 <td class="d-flex">
                                     <div>
                                         <button @click="showModalAlert = true">Alert</button>

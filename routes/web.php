@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 use Inertia\Inertia;
 
 /*
@@ -19,3 +20,6 @@ Route::get('/', function () {
     return Inertia::render("Home");
 
 });
+
+Route::get('/', [UserController::class, 'index'])->name('user.index');
+Route::post('user/{id}', [UserController::class, 'update'])->name('user.update');
