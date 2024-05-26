@@ -1,46 +1,34 @@
 
 <template>
     <Transition name="modal">
-        <div v-if="showModalEdit" class="modal-mask">
+        <div v-if="showModalDetail" class="modal-mask">
             <div class="modal-container">
                 <div class="modal-header">
-                    <slot name="header">Modal Edit</slot>
+                    <slot name="header"><h3>Detail</h3></slot>
                 </div>
-
                 <div class="modal-body">
-                    <form @submit.prevent="submit">
                         <slot name="body">
                             <div class="mb-10">
-                                <div>
-                                    <label for="name">Name</label>
-                                    <input class="ml-10" type="text" v-model="form.name">
-                                </div>
-                                <span class="text-error" v-if="form.errors.name">{{ form.errors.name }}</span>
+                                <label for="name">Name</label>
+                                <span class="ml-30"> {{ form.name }} </span>
                             </div>
                             <div class="mb-10">
-                                <div>
-                                    <label for="email">Email</label>
-                                    <input class="ml-10" type="email" v-model="form.email">
-                                </div>
-                                <span class="text-error" v-if="form.errors.email">{{ form.errors.email }}</span>
+                                <label for="email">Email</label>
+                                <span class="ml-30"> {{ form.email }} </span>
                             </div>
                         </slot>
                         <div class="modal-footer">
                             <slot name="footer">
-                                <button class="modal-default-button" type="submit">OK</button>
-<!--                                <ModalAlert :showModalAlert="form.showModalAlert" @closeModalAlert="form.showModalAlert = false">-->
-<!--                                    <template #body>-->
-<!--                                        <p>Notification Edit Success</p>-->
-<!--                                    </template>-->
-<!--                                </ModalAlert>-->
+                                <button class="modal-default-button ml-10" @click="showEdit(dataUser)">Edit</button>
+                                <ModalEdit :showModalEdit="form.showModalEdit" :dataUser="dataUser" @closeModalEdit="form.showModalEdit = false">
+                                </ModalEdit>
                                 <button
                                     class="modal-default-button"
-                                    @click="$emit('closeModalEdit')"
+                                    @click="$emit('closeModalDetail')"
                                     type="button"
                                 >Cancel</button>
                             </slot>
                         </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -52,30 +40,24 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import ModalAlert from '@/Components/Modals/ModalAlert.vue';
-import { Inertia } from '@inertiajs/inertia';
+import ModalEdit from '@/Components/Modals/ModalEdit.vue';
 import { useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
-    showModalEdit: Boolean,
+    showModalDetail: Boolean,
     dataUser: Object,
-    success: Object,
 });
 
 const form = useForm({
     name: props.dataUser.name,
     email: props.dataUser.email,
-    showModalAlert: false,
-})
+    showModalEdit: false,
+    dataUser: {},
+});
 
-const emit = defineEmits(['defineEmits'])
-
-function submit() {
-    form.post(`/user/${props.dataUser.id}`,{
-        onSuccess: (success) => {
-            Inertia.reload();
-        }
-    });
+function showEdit(user) {
+    this.form.showModalEdit = true;
+    this.form.dataUser = user;
 }
 
 // Watch for changes in props.dataUser and update local refs
@@ -101,7 +83,7 @@ watch(() => props.dataUser, (newDataUser) => {
 }
 
 .modal-container {
-    min-width: 900px;
+    width: 300px;
     margin: auto;
     padding: 20px 30px;
     background-color: #fff;
@@ -134,14 +116,13 @@ watch(() => props.dataUser, (newDataUser) => {
     margin-bottom: 10px;
 }
 
+.ml-30 {
+    margin-left: 30px;
+}
+
 .ml-10 {
     margin-left: 10px;
 }
-
-.text-error{
-    color: red;
-}
-
 .modal-enter-from .modal-container,
 .modal-leave-to .modal-container {
     -webkit-transform: scale(1.1);
